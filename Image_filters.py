@@ -1,9 +1,11 @@
 from PIL import Image
 def main():
     ###takes input of the path from the user
-    
-    image_path = input('Please input the path of your image. Ensure that there are double backslashes in the path instead of single ones.').strip()
-    image = Image.open(image_path)
+    try:
+        image_path = input('Please input the path of your image.').strip()
+        image = Image.open(image_path)
+    except:
+        print('Path does not exist')
     ###stores the number of rows and columns in the image
     width, height = image.size
     image_list = []  ###2D list to be created from image for processing
