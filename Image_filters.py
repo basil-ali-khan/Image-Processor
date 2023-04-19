@@ -1,3 +1,77 @@
+from PIL import Image
+def main():
+    ###takes input of the path from the user
+    
+    image_path = input('Please input the path of your image. Ensure that there are double backslashes in the path instead of single ones.').strip()
+    image = Image.open(image_path)
+    ###stores the number of rows and columns in the image
+    width, height = image.size
+    image_list = []  ###2D list to be created from image for processing
+    
+    ###iterating over rows
+    for r in range(height):
+        row = []
+
+        ###iterating over columns
+        for c in range(width):
+
+            ###getting the pixel at the rth row and cth column and appending it to the new row
+            pixel = image.getpixel((c,r))
+            row.append(pixel)
+        
+        ###appending the new row the 2D list
+        image_list.append(row)
+
+
+    ###this list consists of the operations that can be performed on the image
+    operations = ['flip image', 'color sorting filter', 'emboss filter','grayscale filter', 'edge detection filter', 'blur filter']
+
+    ###Provides user with a list of options
+    print('From the given list of operations, choose the number corresponding to the operation you want to perform.')
+    for i in range(len(operations)):
+        print(f'{i+1} : {operations[i]}')
+    
+
+    ###Takes option from user, validates input
+    option = input('Type your option.')
+    while not option.isdigit() or int(option) < 1 or int(option) > len(operations):
+        option = input('Incorrect option. Please try again!')
+
+    option = int(option)
+
+    if option == 1:
+        new_image = flip_image(image_list)
+
+    elif option == 2:
+        new_image = color_sorting_filter(image_list)
+
+    elif option == 3:
+        new_image = emboss_filter(image_list)
+
+    elif option == 4:
+        new_image = grayscale_filter(image_list)
+
+    elif option == 5:
+        new_image = edge_detection_filter(image_list)
+
+    elif option == 6:
+        new_image = blur_filter(image_list)
+
+    new_width = len(new_image[0])
+    new_height = len(new_image)
+
+    ###creating the edited image
+    final_image = Image.new('RGB', (new_width, new_height))
+
+    for y in range(height):
+        for x in range(width):
+            final_image.putpixel((x,y), new_image[y][x])
+
+    ###show the new image
+    final_image.show()
+
+###digital image processing 
+image = [[23,45,78], [43,76,90], [80,56,43], [32,54,67]]
 ###The push function pushes an item onto the stack's end
 def push(stack, item):
     stack.append(item)
@@ -20,8 +94,8 @@ def is_empty(stack):
 def flip_list(lst):
     stack = []
     new_list = []
-    for i in lst:
-        push(stack, i)
+    for i in range(len(lst)):
+        push(stack, lst[i])
     
     while not is_empty(stack):
         new_list.append(pop(stack))
@@ -31,9 +105,13 @@ def flip_list(lst):
 
 ###This function will flip the image using a stack
 def flip_image(image):
-    image = flip_list(image)
+
+    ###flip the rows first
+    image = flip_list(image) 
+
+    ###then flip each column 
     for i in range(len(image)):
-        image[i] = flip_list[i]
+        image[i] = flip_list(image[i])
           
     return image    
 
@@ -55,3 +133,9 @@ def edge_detection_filter(image):
 def blur_filter(image):
     pass
 
+def grayscale_to_color(image):
+    pass
+
+#print(flip_image(image))
+
+main()
