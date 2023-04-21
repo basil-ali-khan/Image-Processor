@@ -2,7 +2,7 @@ from PIL import Image
 def main():
     ###takes input of the path from the user
     try:
-        image_path = input('Please input the path of your image.8').strip()
+        image_path = input('Please input the path of your image.').strip()
         image = Image.open(image_path)
     except:
         print('Path does not exist')
