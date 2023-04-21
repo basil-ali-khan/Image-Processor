@@ -3,8 +3,10 @@ REFERENCES:
 https://github.com/accord-net/java/blob/master/Catalano.Image/src/Catalano/Imaging/Filters/Emboss.java
 
 """
-
+import math
 from PIL import Image
+
+
 def main():
     ###takes input of the path from the user
     try:
@@ -140,10 +142,10 @@ def apply_kernel(image_part, kernel_part):
             pixel_g += image_part[m][n][1] * kernel_part[m][n]
             pixel_b += image_part[m][n][2] * kernel_part[m][n]
 
-    ###ensuring that the color components remain within 255, which is the max range of colors
-    pixel_r = min(255, pixel_r)
-    pixel_g = min(255, pixel_g)
-    pixel_b = min(255, pixel_b)
+    ###ensuring that the color components remain within 0-255, which is the max range of colors
+    pixel_r = max(0, min(255, int(pixel_r)))
+    pixel_g = max(0, min(255, int(pixel_g)))
+    pixel_b = max(0, min(255, int(pixel_b)))
 
     return (pixel_r, pixel_g, pixel_b, 255)
 
@@ -187,25 +189,34 @@ def emboss_filter(image):
             new_row.append(new_pixel)
         
         embossed_image.append(new_row)
-            #print(image_part)
-            #print(kernel_part)
-            #print('\n\n')
+            
     return embossed_image
 
 
 def grayscale_filter(image):
-    pass
+    ###this involves finding the average of the RGB values and then replacing the RGB components with the average
+    grayed_image = []
+
+    for r in range(len(image)):
+        grayed_row = []
+        for c in range(len(image[0])):
+            current_pixel = image[r][c]
+            average = math.floor((current_pixel[0] + current_pixel[1] + current_pixel[2]) / 3)
+            grayed_row.append((average, average, average, 255))
+        grayed_image.append(grayed_row)
+        
+    return grayed_image
 
 def edge_detection_filter(image):
     pass
 
 def blur_filter(image):
     blurred_image = []
-    kernel = [[0, 1, 0], [1, 2, 1], [0, 1, 0]]
+    kernel = [[0,0.5,0], [0.5,1,0.5], [0,0.5,0]]
 
     for row in range(len(image)):
         new_row = []
-        for col in range(len(image[row])):
+        for col in range(len(image[0])):
 
             current_pixel = image[row][col]
 
@@ -239,14 +250,11 @@ def blur_filter(image):
             new_row.append(new_pixel)
         
         blurred_image.append(new_row)
-            #print(image_part)
-            #print(kernel_part)
-            #print('\n\n')
+            
     return blurred_image
 
-def grayscale_to_color(image):
-    pass
 
-#print(flip_image(image))
+
+
 
 main()
