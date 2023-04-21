@@ -1,3 +1,9 @@
+"""
+REFERENCES:
+https://github.com/accord-net/java/blob/master/Catalano.Image/src/Catalano/Imaging/Filters/Emboss.java
+
+"""
+
 from PIL import Image
 def main():
     ###takes input of the path from the user
@@ -194,7 +200,49 @@ def edge_detection_filter(image):
     pass
 
 def blur_filter(image):
-    pass
+    blurred_image = []
+    kernel = [[0, 1, 0], [1, 2, 1], [0, 1, 0]]
+
+    for row in range(len(image)):
+        new_row = []
+        for col in range(len(image[row])):
+
+            current_pixel = image[row][col]
+
+            ###setting the indexes of the part of image that needs to be convoluted
+            up_index = row - 1
+            down_index = row + 2
+            left_index = col - 1
+            right_index = col + 2
+
+            if up_index < 0:
+                up_index = 0
+            if down_index > len(image):
+                down_index = len(image)
+            if left_index < 0:
+                left_index = col
+            if right_index > len(image[0]):
+                right_index = len(image[0])
+
+            ###part of image that will be taken for convolution in this iteration:
+            image_part = [r[left_index:right_index] for r in image[up_index:down_index]]
+
+            ###setting indexes of part of kernel that will be used
+            kernel_up = 1 - (row - up_index)
+            kernel_down = 1 + (down_index - row)
+            kernel_left = 1 - (col - left_index)
+            kernel_right = 1 + (right_index - col)
+
+            kernel_part = [s[kernel_left:kernel_right] for s in kernel[kernel_up:kernel_down]]
+
+            new_pixel = apply_kernel(image_part, kernel_part)
+            new_row.append(new_pixel)
+        
+        blurred_image.append(new_row)
+            #print(image_part)
+            #print(kernel_part)
+            #print('\n\n')
+    return blurred_image
 
 def grayscale_to_color(image):
     pass
