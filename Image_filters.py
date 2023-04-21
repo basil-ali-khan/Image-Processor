@@ -2,7 +2,7 @@ from PIL import Image
 def main():
     ###takes input of the path from the user
     try:
-        image_path = input('Please input the path of your image.').strip()
+        image_path = input('Please input the path of your image.8').strip()
         image = Image.open(image_path)
     except:
         print('Path does not exist')
@@ -123,8 +123,69 @@ def flip_image(image):
 def color_sorting_filter(image):
     pass
 
+def apply_kernel(image_part, kernel_part):
+    ###initialising the new values of each of the colors in the pixel
+    pixel_r = pixel_g = pixel_b = 0
+
+    for m in range(len(image_part)):
+        for n in range(len(image_part[0])):
+            ###updating each of the color components of the image
+            pixel_r += image_part[m][n][0] * kernel_part[m][n]
+            pixel_g += image_part[m][n][1] * kernel_part[m][n]
+            pixel_b += image_part[m][n][2] * kernel_part[m][n]
+
+    ###ensuring that the color components remain within 255, which is the max range of colors
+    pixel_r = min(255, pixel_r)
+    pixel_g = min(255, pixel_g)
+    pixel_b = min(255, pixel_b)
+
+    return (pixel_r, pixel_g, pixel_b, 255)
+
 def emboss_filter(image):
-    pass
+    embossed_image = []
+    kernel = [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]]
+
+    for row in range(len(image)):
+        new_row = []
+        for col in range(len(image[row])):
+
+            current_pixel = image[row][col]
+
+            ###setting the indexes of the part of image that needs to be convoluted
+            up_index = row - 1
+            down_index = row + 2
+            left_index = col - 1
+            right_index = col + 2
+
+            if up_index < 0:
+                up_index = 0
+            if down_index > len(image):
+                down_index = len(image)
+            if left_index < 0:
+                left_index = col
+            if right_index > len(image[0]):
+                right_index = len(image[0])
+
+            ###part of image that will be taken for convolution in this iteration:
+            image_part = [r[left_index:right_index] for r in image[up_index:down_index]]
+
+            ###setting indexes of part of kernel that will be used
+            kernel_up = 1 - (row - up_index)
+            kernel_down = 1 + (down_index - row)
+            kernel_left = 1 - (col - left_index)
+            kernel_right = 1 + (right_index - col)
+
+            kernel_part = [s[kernel_left:kernel_right] for s in kernel[kernel_up:kernel_down]]
+
+            new_pixel = apply_kernel(image_part, kernel_part)
+            new_row.append(new_pixel)
+        
+        embossed_image.append(new_row)
+            #print(image_part)
+            #print(kernel_part)
+            #print('\n\n')
+    return embossed_image
+
 
 def grayscale_filter(image):
     pass
