@@ -208,6 +208,10 @@ def grayscale_filter(image):
     return grayed_image
 
 def edge_detection_filter(image):
+    '''
+    In this filter, two kernels are applied, one is in the x-direction and the other is in the y-direction. The resultant of the results of the
+    two are then the value of the final pixel.
+    '''
     kernel_x = [[-1,0,1],[-1,0,1],[-1,0,1]]
     kernel_y = [[-1,-1,-1],[0,0,0],[1,1,1]]
 
@@ -243,22 +247,34 @@ def edge_detection_filter(image):
             kernel_left = 1 - (col - left_index)
             kernel_right = 1 + (right_index - col)
 
+            ###part of kernel_x to be applied in x-direction
             kernel_part_x = [s[kernel_left:kernel_right] for s in kernel_x[kernel_up:kernel_down]]
+            
+            ###part of kernel_y to be applied in y-direction
             kernel_part_y = [s[kernel_left:kernel_right] for s in kernel_y[kernel_up:kernel_down]]
 
+            ###pixel returned after applying kernel_x
             new_pixel_x = apply_kernel(image_part, kernel_part_x)
+            
+            ###pixel returned after applying kernel_y
             new_pixel_y = apply_kernel(image_part, kernel_part_y)
 
+            ###finding final pixel
             final_pixel = []
             for k in range(3):
+                ###The resultant final pixel is the square root of the sum of the squares of the pixels returned after applying both kernels.
                 component = math.floor(math.sqrt(new_pixel_x[k]**2 + new_pixel_y[k]**2))
                 final_pixel.append(component)
 
-            #r_final = math.floor(math.sqrt((new_pixel_x[k])^2 + (new_pixel_y[k])^2))
-            
+            ###Appending 255 to complete the tuple for the 255 color image
             final_pixel.append(255)
+            
+            ###adding the pixel to the new row
             new_row.append(tuple(final_pixel))
+
+        ###adding the new row the final image
         new_image.append(new_row)
+        
     return new_image
 
 
