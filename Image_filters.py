@@ -8,14 +8,19 @@ from PIL import Image
 
 
 def main():
-    ###takes input of the path from the user
-    try:
-        image_path = input('Please input the path of your image.').strip()
-        image = Image.open(image_path)
-    except:
-        print('Path does not exist')
+    
+    
+    while True:
+        image_path = input('Please input the path of your image: ').strip()
+        try:
+            image = Image.open(image_path)
+            width, height = image.size
+            break  # break out of the while loop if the image was successfully opened
+        except (UnboundLocalError, FileNotFoundError):
+            print('The path you entered does not exist. Please try again.')
+    
     ###stores the number of rows and columns in the image
-    width, height = image.size
+    
     image_list = []  ###2D list to be created from image for processing
     
     ###iterating over rows
@@ -84,7 +89,7 @@ def main():
     final_image.show()
 
 ###digital image processing 
-image = [[23,45,78], [43,76,90], [80,56,43], [32,54,67]]
+#image = [[23,45,78], [43,76,90], [80,56,43], [32,54,67]]
 ###The push function pushes an item onto the stack's end
 def push(stack, item):
     stack.append(item)
@@ -128,11 +133,58 @@ def flip_image(image):
           
     return image    
 
+def sum_of_pixels(tup):
+    return tup[0] + tup[1] + tup[2]
 
+###The merge sort algorithm will be used to sort the image pixels on the basis of the sum of their RGB components
+def merge(left, right, lst):
+    i = j = 0
+    while i + j < len(lst):
+        if j == len(right) or (i < len(left) and sum_of_pixels(left[i]) < sum_of_pixels(right[j])):
+            lst[i + j] = left[i]
+            i += 1
+        else:
+            lst[i + j] = right[j]
+            j += 1
+
+def merge_sort(image):
+    if len(image) < 2:
+        return image
+    
+    left = image[:(len(image) // 2)]
+    right = image[(len(image) // 2):]
+
+    merge_sort(left)
+    merge_sort(right)
+
+    #lst = []
+    merge(left, right, image)
 ###The following functions are each separate filters
 
+
 def color_sorting_filter(image):
-    pass
+    width = len(image[0])
+    height = len(image)
+
+    sorted_image = []
+    image_1D = []  ###converting 2D image list to 1D, to make sorting easier
+    for r in range(height):
+        for c in range(width):
+            image_1D.append(image[r][c])
+
+    merge_sort(image_1D)
+
+    counter = 0
+    for y in range(height):
+        new_row = []
+
+        for x in range(width):
+            new_row.append(image_1D[counter])
+            counter += 1
+        
+        sorted_image.append(new_row)
+
+    return sorted_image
 
 def apply_kernel(image_part, kernel_part):
     ###initialising the new values of each of the colors in the pixel
