@@ -34,7 +34,7 @@ def main():
 
 
     ###this list consists of the operations that can be performed on the image
-    operations = ['flip image', 'color sorting filter', 'emboss filter','grayscale filter', 'edge detection filter', 'blur filter']
+    operations = ['flip image', 'color sorting filter', 'emboss filter','grayscale filter', 'edge detection filter', 'blur filter', 'mirror image']
 
     ###Provides user with a list of options
     print('From the given list of operations, choose the number corresponding to the operation you want to perform.')
@@ -66,6 +66,9 @@ def main():
 
     elif option == 6:
         new_image = blur_filter(image_list)
+
+    elif option == 7:
+        new_image = mirror_image(image_list)
 
     new_width = len(new_image[0])
     new_height = len(new_image)
@@ -321,8 +324,11 @@ def blur_filter(image):
             
     return blurred_image
 
+def mirror_image(image):
+    mirrored_image = []
+    for i in image:
+        mirrored_image.append(flip_list(i))
 
-
-
+    return mirrored_image
 
 main()
