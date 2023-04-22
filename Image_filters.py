@@ -204,11 +204,63 @@ def grayscale_filter(image):
             average = math.floor((current_pixel[0] + current_pixel[1] + current_pixel[2]) / 3)
             grayed_row.append((average, average, average, 255))
         grayed_image.append(grayed_row)
-        
+
     return grayed_image
 
 def edge_detection_filter(image):
-    pass
+    kernel_x = [[-1,0,1],[-1,0,1],[-1,0,1]]
+    kernel_y = [[-1,-1,-1],[0,0,0],[1,1,1]]
+
+    new_image = []
+
+    for row in range(len(image)):
+        new_row = []
+        for col in range(len(image[0])):
+
+            current_pixel = image[row][col]
+
+            ###setting the indexes of the part of image that needs to be convoluted
+            up_index = row - 1
+            down_index = row + 2
+            left_index = col - 1
+            right_index = col + 2
+
+            if up_index < 0:
+                up_index = 0
+            if down_index > len(image):
+                down_index = len(image)
+            if left_index < 0:
+                left_index = col
+            if right_index > len(image[0]):
+                right_index = len(image[0])
+
+            ###part of image that will be taken for convolution in this iteration:
+            image_part = [r[left_index:right_index] for r in image[up_index:down_index]]
+
+            ###setting indexes of part of kernel that will be used
+            kernel_up = 1 - (row - up_index)
+            kernel_down = 1 + (down_index - row)
+            kernel_left = 1 - (col - left_index)
+            kernel_right = 1 + (right_index - col)
+
+            kernel_part_x = [s[kernel_left:kernel_right] for s in kernel_x[kernel_up:kernel_down]]
+            kernel_part_y = [s[kernel_left:kernel_right] for s in kernel_y[kernel_up:kernel_down]]
+
+            new_pixel_x = apply_kernel(image_part, kernel_part_x)
+            new_pixel_y = apply_kernel(image_part, kernel_part_y)
+
+            final_pixel = []
+            for k in range(3):
+                component = math.floor(math.sqrt(new_pixel_x[k]**2 + new_pixel_y[k]**2))
+                final_pixel.append(component)
+
+            #r_final = math.floor(math.sqrt((new_pixel_x[k])^2 + (new_pixel_y[k])^2))
+            
+            final_pixel.append(255)
+            new_row.append(tuple(final_pixel))
+        new_image.append(new_row)
+    return new_image
+
 
 def blur_filter(image):
     blurred_image = []
