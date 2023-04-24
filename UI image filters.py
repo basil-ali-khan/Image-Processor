@@ -1,3 +1,13 @@
+"""
+REFERENCES:
+https://github.com/accord-net/java/blob/master/Catalano.Image/src/Catalano/Imaging/Filters/Emboss.java
+https://www.youtube.com/watch?v=YXPyB4XeYLA&t=10455s
+https://sbme-tutorials.github.io/2018/cv/notes/4_week4.html#:~:text=and%20pepper%20noise.-,Edge%20detection%20kernels,algorithms%20will%20discussed%20in%20details.
+https://datacarpentry.org/image-processing/06-blurring/#:~:text=When%20we%20blur%20an%20image,other%20tasks%20such%20as%20thresholding.
+
+
+"""
+
 from tkinter import *
 from tkinter import filedialog 
 from PIL import ImageTk, Image
@@ -44,18 +54,27 @@ def apply_kernel(image_part, kernel_part):
     pixel_b = max(0, min(255, int(pixel_b)))
 
     return (pixel_r, pixel_g, pixel_b, 255)
+
+
+###This will push an item to the top of the stack
 def push(stack, item):
     stack.append(item)
-    #The pop function removes the last item of the stack and also returns it.
+
+
+#The pop function removes the last item of the stack and also returns it.
 def pop(stack):
     x = stack.pop(-1)
     return x
-    #The is_empty function returns True if the stack is empty, returns False otherwise
+
+
+#The is_empty function returns True if the stack is empty, returns False otherwise
 def is_empty(stack):
     if len(stack) == 0:
         return True
     return False
-    #Given a list, this function returns a flipped list, using a stack
+
+
+#Given a list, this function returns a flipped list, using a stack
 def flip_list(lst):
     stack = []
     new_list = []
@@ -66,11 +85,14 @@ def flip_list(lst):
         new_list.append(pop(stack))
 
     return new_list
-    #This function will flip the image using a stack
+
+###This helper function will be used in color-sorting, given a tuple in the form of (r,g,b,255), it returns the sum of the pixel's RGB components
 def sum_of_pixels(tup):
     return tup[0] + tup[1] + tup[2]
+
+
+###The merge sort algorithm will be used to sort the image pixels on the basis of the sum of their RGB components
 def merge(left, right, lst):
-    ###The merge sort algorithm will be used to sort the image pixels on the basis of the sum of their RGB components
     i = j = 0
     while i + j < len(lst):
         if j == len(right) or (i < len(left) and sum_of_pixels(left[i]) < sum_of_pixels(right[j])):
@@ -79,6 +101,7 @@ def merge(left, right, lst):
         else:
             lst[i + j] = right[j]
             j += 1
+
 def merge_sort(image):
     if len(image) < 2:
         return image
@@ -91,8 +114,11 @@ def merge_sort(image):
 
     #lst = []
     merge(left, right, image)
-def create(image):
-    #creating the edited image
+
+
+
+#creating the edited image
+def create(image):    
     width = len(image[0])
     height = len(image)
     final_image = Image.new('RGB', (width, height))
@@ -100,6 +126,9 @@ def create(image):
         for x in range(width):
             final_image.putpixel((x,y), image[y][x])
     return final_image
+
+
+###convert image to a 2D list
 def process(image):
     width, height = image.size
     image_list = []  ###2D list to be created from image for processing    
@@ -120,6 +149,9 @@ def process(image):
 
 
 #filter functions
+
+
+#This function will flip the image using a stack
 def flip_image(image):
 
     ###flip the rows first
@@ -130,6 +162,8 @@ def flip_image(image):
         image[i] = flip_list(image[i])
           
     return image  
+
+
 def grayscale_filter(image):
     ###this involves finding the average of the RGB values and then replacing the RGB components with the average
     grayed_image = []
@@ -137,12 +171,21 @@ def grayscale_filter(image):
     for r in range(len(image)):
         grayed_row = []
         for c in range(len(image[0])):
-            current_pixel = image[r][c]
+            ###accessing current pixel to be processed
+            current_pixel = image[r][c]   
+
+            ###Finding average
             average = math.floor((current_pixel[0] + current_pixel[1] + current_pixel[2]) / 3)
+
+            ###Appending new pixel to the row
             grayed_row.append((average, average, average, 255))
+
+        ###appending new row to the image
         grayed_image.append(grayed_row)
 
     return grayed_image
+
+
 def emboss_filter(image):
     embossed_image = []
     kernel = [[-2, -1, 0], [-1, 1, 1], [0, 1, 2]]
@@ -177,12 +220,20 @@ def emboss_filter(image):
             kernel_left = 1 - (col - left_index)
             kernel_right = 1 + (right_index - col)
 
+            ###part of kernel to be taken for convolution in ongoing iteration
             kernel_part = [s[kernel_left:kernel_right] for s in kernel[kernel_up:kernel_down]]
 
+            ###new pixel generated after applying the kernel
             new_pixel = apply_kernel(image_part, kernel_part)
+
+
             new_row.append(new_pixel)
+
         embossed_image.append(new_row) 
+
     return embossed_image
+
+
 def edge_detection_filter(image):
     '''
     In this filter, two kernels are applied, one is in the x-direction and the other is in the y-direction. The resultant of the results of the
@@ -252,6 +303,8 @@ def edge_detection_filter(image):
         new_image.append(new_row)
         
     return new_image
+
+
 def blur_filter(image):
     blurred_image = []
     kernel = [[1/16,1/8,1/16], [1/8,1/4,1/8], [1/16,1/8,1/16]]
@@ -294,12 +347,17 @@ def blur_filter(image):
         blurred_image.append(new_row)
             
     return blurred_image
+
+
 def mirror_image(image):
     mirrored_image = []
     for i in image:
+        ###passing each row as parameter to the flip_list function, that returns that row as a flipped version of its original self using a stack
         mirrored_image.append(flip_list(i))
 
     return mirrored_image
+
+
 def color_sorting_filter(image):
     width = len(image[0])
     height = len(image)
@@ -331,6 +389,8 @@ def undo():
     global previous
     newimage = previous
     undoButton = Button(root, text="Undo", state=DISABLED).grid(row=0 ,column=3)
+
+
 def flippedH():
     global newimage
     global previous
@@ -345,6 +405,8 @@ def flippedH():
     newimage = mirror_image(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+
+
 def blur():
     global newimage
     global previous
@@ -359,6 +421,8 @@ def blur():
     newimage = blur_filter(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)  
+
+
 def emboss():
     global newimage
     global previous
@@ -373,6 +437,8 @@ def emboss():
     newimage = emboss_filter(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2) 
+
+
 def edgedetect():
     global newimage
     global previous
@@ -387,6 +453,8 @@ def edgedetect():
     newimage = edge_detection_filter(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)  
+
+
 def grayscale():
     global newimage
     global previous
@@ -401,6 +469,8 @@ def grayscale():
     newimage = grayscale_filter(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+
+
 def flippedV():
     global newimage
     global previous
@@ -415,6 +485,8 @@ def flippedV():
     newimage = flip_image(image)
     newimage = create(newimage)
     viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+
+
 def coloursort():
     global newimage
     global previous
