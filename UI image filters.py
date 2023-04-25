@@ -20,16 +20,17 @@ def fileselect():
     global newimage
     newimage = None
     originalfile = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=((".PNG", "*.png"), (".JPG", "*.jpg"), ("All Files", '*.*')))
-    viewbuttonO = Button(root, text="View Original", command=viewOriginal).grid(row=0 ,column=1)
-    viewbuttonE = Button(root, text="View Edited", state=DISABLED).grid(row=0 ,column=2)
-    undoButton = Button(root, text="Undo", state=DISABLED).grid(row=0 ,column=3)
-    flipVButton = Button(root, text="Flip Vertically", command=flippedV).grid(row=1, column=0)
-    flipHButton = Button(root, text="Flip Horizontally", command=flippedH).grid(row=1,column=1)
-    grayButton = Button(root, text="Grayscale Filter", command=grayscale).grid(row=1, column=2)
-    embossButton = Button(root, text="Emboss Filter", command=emboss).grid(row=1, column=3)
-    edgedetectButton = Button(root, text="Edge Detect Filter", command=edgedetect).grid(row = 1, column=4)
-    blurButton = Button(root, text="Blur Filter", command=blur).grid(row = 1, column=5)
-    coloursortButton = Button(root, text="Colour Sort", command=coloursort).grid(row = 1, column=6)
+    viewbuttonO = Button(root, text="View Original", command=viewOriginal,bg="#08A045",padx=28, pady=5).place(x=10,y=125)
+    viewbuttonE = Button(root, text="View Edited", state=DISABLED,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    undoButton = Button(root, text="Undo", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
+    saveButton = Button(root, text="Save Edited", state=DISABLED,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
+    flipVButton = Button(root, text="Flip Vertically", command=flippedV,bg="#08A045",padx=30, pady=5).place(x=150, y=5)
+    flipHButton = Button(root, text="Flip Horizontally", command=flippedH,bg="#08A045",padx=20, pady=5).place(x=10, y=5)
+    grayButton = Button(root, text="Grayscale Filter", command=grayscale,bg="#08A045",padx=23, pady=5).place(x=10, y=85)
+    embossButton = Button(root, text="Emboss Filter", command=emboss,bg="#08A045",padx=10, pady=5).place(x=5, y=45)
+    edgedetectButton = Button(root, text="Edge Detect Filter", command=edgedetect,bg="#08A045",padx=20, pady=5).place(x=150, y=85)
+    blurButton = Button(root, text="Blur Filter", command=blur,bg="#08A045",padx=10, pady=5).place(x=115, y=45)
+    coloursortButton = Button(root, text="Colour Sort", command=coloursort,bg="#08A045",padx=10, pady=5).place(x=205, y=45)
 
 #helper functions
 def viewOriginal():
@@ -384,11 +385,19 @@ def color_sorting_filter(image):
 
 
 #button commands
+
+def save():
+    global newimage
+    filename = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG", "*.png"), ("JPG", "*.jpg")])
+    if filename:
+        newimage.save(filename)
+    
+    
 def undo():
     global newimage
     global previous
     newimage = previous
-    undoButton = Button(root, text="Undo", state=DISABLED).grid(row=0 ,column=3)
+    undoButton = Button(root, text="Undo", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
 
 
 def flippedH():
@@ -398,13 +407,14 @@ def flippedH():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)  
+        undoButton = Button(root, text="Undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = mirror_image(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def blur():
@@ -414,13 +424,14 @@ def blur():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="Undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = blur_filter(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)  
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def emboss():
@@ -430,13 +441,14 @@ def emboss():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = emboss_filter(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2) 
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def edgedetect():
@@ -446,13 +458,14 @@ def edgedetect():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = edge_detection_filter(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)  
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def grayscale():
@@ -462,13 +475,14 @@ def grayscale():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = grayscale_filter(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def flippedV():
@@ -478,13 +492,14 @@ def flippedV():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="Undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = flip_image(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 
 def coloursort():
@@ -494,29 +509,31 @@ def coloursort():
     if editedfile != None:  
         image = editedfile
         previous = newimage
-        undoButton = Button(root, text="Undo", command=undo).grid(row=0 ,column=3)
+        undoButton = Button(root, text="Undo", command=undo,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
     else:
         image = Image.open(originalfile)
     image = process(image)
     newimage = color_sorting_filter(image)
     newimage = create(newimage)
-    viewbuttonE = Button(root, text="View Edited", command=viewEdited).grid(row=0 ,column=2)
-    newimage.show()
-
+    viewbuttonE = Button(root, text="View Edited", command=viewEdited,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+    saveButton = Button(root, text="Save Edited", command=save,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
 
 root = Tk()
+root.geometry("300x200")
 root.title("Photo Manipulation")
-browse = Button(root, text="Browse Images", command=(fileselect)).grid(row=0, column=0)
-viewbuttonO = Button(root, text="View Original", state=DISABLED).grid(row=0 ,column=1)
-viewbuttonE = Button(root, text="View Edited", state=DISABLED).grid(row=0 ,column=2)
-undoButton = Button(root, text="Undo", state=DISABLED).grid(row=0 ,column=3)
-flipVButton = Button(root, text="Flip Vertically", state=DISABLED).grid(row=1, column=0)
-flipHButton = Button(root, text="Flip Horizontally", state=DISABLED).grid(row=1,column=1)
-grayButton = Button(root, text="Grayscale Filter", state=DISABLED).grid(row=1, column=2)
-embossButton = Button(root, text="Emboss Filter", state=DISABLED).grid(row=1, column=3)
-edgedetectButton = Button(root, text="Edge Detect Filter", state=DISABLED).grid(row = 1, column=4)
-blurButton = Button(root, text="Blur Filter", state=DISABLED).grid(row = 1, column=5)
-coloursortButton = Button(root, text="Colour Sort", state=DISABLED).grid(row = 1, column=6)
+root.configure(bg="#D3F3EE")
+browse = Button(root, text="Browse Images", command=fileselect, bg="#08A045", padx=10, pady=5).place(x=190, y=163)
+viewbuttonO = Button(root, text="View Original", state=DISABLED, bg="#08A045",padx=28, pady=5).place(x=10,y=125)
+viewbuttonE = Button(root, text="View Edited", state=DISABLED,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+undoButton = Button(root, text="Undo", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
+saveButton = Button(root, text="Save Edited", state=DISABLED,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
+flipVButton = Button(root, text="Flip Vertically", state=DISABLED,bg="#08A045",padx=30, pady=5).place(x=150, y=5)
+flipHButton = Button(root, text="Flip Horizontally", state=DISABLED,bg="#08A045",padx=20, pady=5).place(x=10, y=5)
+grayButton = Button(root, text="Grayscale Filter", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=10, y=85)
+embossButton = Button(root, text="Emboss Filter", state=DISABLED,bg="#08A045",padx=10, pady=5).place(x=5, y=45)
+edgedetectButton = Button(root, text="Edge Detect Filter", state=DISABLED,bg="#08A045",padx=20, pady=5).place(x=150, y=85)
+blurButton = Button(root, text="Blur Filter", state=DISABLED,bg="#08A045",padx=10, pady=5).place(x=115, y=45)
+coloursortButton = Button(root, text="Colour Sort", state=DISABLED,bg="#08A045",padx=10, pady=5).place(x=205, y=45)
 
 root.mainloop()
 
