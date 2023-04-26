@@ -335,8 +335,7 @@ def edge_detection_filter(image):
 
 def blur_filter(image):
     blurred_image = []
-    #kernel = [[1/8,1/4,1/8], [1/4, 1/2,1/4], [1/8,1/4,1/8]]
-    kernel = [[1/64,1/32,1/64], [1/32,1/16,1/32], [1/64,1/32,1/64]]
+    kernel = [[1/16,1/8,1/16], [1/8,1/4,1/8], [1/16,1/8,1/16]]
 
     for row in range(len(image)):
         new_row = []
