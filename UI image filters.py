@@ -20,17 +20,18 @@ def fileselect():
     global newimage
     newimage = None
     originalfile = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=((".PNG", "*.png"), (".JPG", "*.jpg"), ("All Files", '*.*')))
-    viewbuttonO = Button(root, text="View Original", command=viewOriginal,bg="#08A045",padx=28, pady=5).place(x=10,y=125)
-    viewbuttonE = Button(root, text="View Edited", state=DISABLED,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
-    undoButton = Button(root, text="Undo", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
-    saveButton = Button(root, text="Save Edited", state=DISABLED,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
-    flipVButton = Button(root, text="Flip Vertically", command=flippedV,bg="#08A045",padx=30, pady=5).place(x=150, y=5)
-    flipHButton = Button(root, text="Flip Horizontally", command=flippedH,bg="#08A045",padx=20, pady=5).place(x=10, y=5)
-    grayButton = Button(root, text="Grayscale Filter", command=grayscale,bg="#08A045",padx=23, pady=5).place(x=10, y=85)
-    embossButton = Button(root, text="Emboss Filter", command=emboss,bg="#08A045",padx=10, pady=5).place(x=5, y=45)
-    edgedetectButton = Button(root, text="Edge Detect Filter", command=edgedetect,bg="#08A045",padx=20, pady=5).place(x=150, y=85)
-    blurButton = Button(root, text="Blur Filter", command=blur,bg="#08A045",padx=10, pady=5).place(x=115, y=45)
-    coloursortButton = Button(root, text="Colour Sort", command=coloursort,bg="#08A045",padx=10, pady=5).place(x=205, y=45)
+    if originalfile:
+        viewbuttonO = Button(root, text="View Original", command=viewOriginal,bg="#08A045",padx=28, pady=5).place(x=10,y=125)
+        viewbuttonE = Button(root, text="View Edited", state=DISABLED,bg="#08A045",padx=35,pady=5).place(x=150,y=125)
+        undoButton = Button(root, text="Undo", state=DISABLED,bg="#08A045",padx=23, pady=5).place(x=3,y=163)
+        saveButton = Button(root, text="Save Edited", state=DISABLED,bg="#08A045",padx=14, pady=5).place(x=90, y=163)
+        flipVButton = Button(root, text="Flip Vertically", command=flippedV,bg="#08A045",padx=30, pady=5).place(x=150, y=5)
+        flipHButton = Button(root, text="Flip Horizontally", command=flippedH,bg="#08A045",padx=20, pady=5).place(x=10, y=5)
+        grayButton = Button(root, text="Grayscale Filter", command=grayscale,bg="#08A045",padx=23, pady=5).place(x=10, y=85)
+        embossButton = Button(root, text="Emboss Filter", command=emboss,bg="#08A045",padx=10, pady=5).place(x=5, y=45)
+        edgedetectButton = Button(root, text="Edge Detect Filter", command=edgedetect,bg="#08A045",padx=20, pady=5).place(x=150, y=85)
+        blurButton = Button(root, text="Blur Filter", command=blur,bg="#08A045",padx=10, pady=5).place(x=115, y=45)
+        coloursortButton = Button(root, text="Colour Sort", command=coloursort,bg="#08A045",padx=10, pady=5).place(x=205, y=45)
 
 #helper functions
 def viewOriginal():
