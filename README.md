@@ -7,8 +7,8 @@ filters to them or rotating them.
 
 Why Is This Novel?
 1. We are using stacks to rotate images, rather than using the conventional
-method of iterating over the nested list of pixels in backward direction 2. We
-will create our own kernels for the filters rather than the built-in convolution
+method of iterating over the nested list of pixels in backward direction 
+2. We will create our own kernels for the filters rather than the built-in convolution
 functions of python.
 
 Data Structure Used
