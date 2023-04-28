@@ -15,9 +15,9 @@ Save the edited image
 
 **Requirements**
 
-Python 3.x
-Tkinter
-Pillow (PIL)
+Python 3.x \\
+Tkinter \\
+Pillow (PIL) \\
 
 **Usage**
 
